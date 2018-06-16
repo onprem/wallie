@@ -14,7 +14,7 @@ class MainFrame(wx.Frame):
         self.jpgs = GetJpgList(os.getcwd()) # get all the jpegs in the Images directory
         self.CurrentJpg = 0
 
-        self.MaxImageSize = 400
+        self.MaxImageSize = 300
         
         b = wx.Button(self, 0, ">")
         b.Bind(wx.EVT_BUTTON, self.DisplayNext)
@@ -30,7 +30,7 @@ class MainFrame(wx.Frame):
 
         # starting with an EmptyBitmap, the real one will get put there
         # by the call to .DisplayNext()
-        self.Image = wx.StaticBitmap(self, bitmap=wx.EmptyBitmap(self.MaxImageSize, self.MaxImageSize))
+        self.Image = wx.StaticBitmap(self, bitmap=wx.EmptyBitmap(self.MaxImageSize, self.MaxImageSize-100))
 
         self.DisplayNext()
 
