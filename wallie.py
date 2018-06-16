@@ -11,7 +11,7 @@ class TestFrame(wx.Frame):
 
         # there needs to be an "Images" directory with one or more jpegs in it in the
         # current working directory for this to work
-        self.jpgs = GetJpgList(".") # get all the jpegs in the Images directory
+        self.jpgs = GetJpgList(os.getcwd()) # get all the jpegs in the Images directory
         self.CurrentJpg = 0
 
         self.MaxImageSize = 400
@@ -215,7 +215,7 @@ def GetJpgList(dir):
 class App(wx.App):
     def OnInit(self):
 
-        frame = TestFrame(None, -1, "wxBitmap Test", wx.DefaultPosition,(550,200))
+        frame = TestFrame(None, -1, "Wallie", wx.DefaultPosition,(550,200))
         self.SetTopWindow(frame)
         frame.Show(True)
         return True
