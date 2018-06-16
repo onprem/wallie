@@ -5,7 +5,7 @@ if sys.version_info <= (2, 6):
 else:
     import subprocess
 
-class TestFrame(wx.Frame):
+class MainFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
 
@@ -25,6 +25,9 @@ class TestFrame(wx.Frame):
         setw = wx.Button(self, 0, "Set as Wallpaper")
         setw.Bind(wx.EVT_BUTTON, self.SetWallpaper)
 
+        cd = wx.Button(self, 0, "Choose Directory")
+        cd.Bind(wx.EVT_BUTTON, self.ChooseDir)
+
         # starting with an EmptyBitmap, the real one will get put there
         # by the call to .DisplayNext()
         self.Image = wx.StaticBitmap(self, bitmap=wx.EmptyBitmap(self.MaxImageSize, self.MaxImageSize))
@@ -33,6 +36,8 @@ class TestFrame(wx.Frame):
 
         # Using a Sizer to handle the layout: I never  use absolute positioning
         box = wx.BoxSizer(wx.VERTICAL)
+
+        box.Add(cd, 0, wx.CENTER | wx.ALL,10)
 
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -73,7 +78,7 @@ class TestFrame(wx.Frame):
             else:
                 #print("Unsupported desktop environment")
                 #print("Trying feh")
-                os.system("feh --bg-fill {save_location}".format(save_location=save_location))
+                os.system("feh --bg-fill '{save_location}'".format(save_location=save_location))
                 #print("[SUCCESS] done!!")
 
         # Windows
@@ -108,7 +113,16 @@ class TestFrame(wx.Frame):
                                             save_location=save_location)
             os.system(command)
 
+    def ChooseDir(self, event=None):
+        dialog = wx.DirDialog(None, "Choose a directory:",style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
+        if dialog.ShowModal() == wx.ID_OK:
+            self.jpgs = GetJpgList(dialog.GetPath())
+            self.DisplayNext()
+        dialog.Destroy()
+
     def DisplayNext(self, event=None):
+        if len(self.jpgs) == 0:
+            return 1
         # load the image
         Img = wx.Image(self.jpgs[self.CurrentJpg], wx.BITMAP_TYPE_ANY)
 
@@ -136,6 +150,8 @@ class TestFrame(wx.Frame):
             self.CurrentJpg = 0
 
     def DisplayPrevious(self, event=None):
+        if len(self.jpgs) == 0:
+            return 1
         # load the image
         Img = wx.Image(self.jpgs[self.CurrentJpg - 2], wx.BITMAP_TYPE_ANY)
 
@@ -215,11 +231,11 @@ def GetJpgList(dir):
 class App(wx.App):
     def OnInit(self):
 
-        frame = TestFrame(None, -1, "Wallie", wx.DefaultPosition,(550,200))
+        frame = MainFrame(None, -1, "Wallie", wx.DefaultPosition,(550,200))
         self.SetTopWindow(frame)
         frame.Show(True)
         return True
 
 if __name__ == "__main__":
-    app = App(0)
+    app = App(False)
     app.MainLoop()
