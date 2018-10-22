@@ -23,5 +23,7 @@ It supports Windows, Mac and Linux (major Desktop Environments)
 
 ### Usage
 
-run `wallie` in terminal
+run `wallie` in terminal and enjoy
+
+Cheers
 
